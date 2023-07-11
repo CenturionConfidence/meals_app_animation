@@ -5,10 +5,10 @@ import 'package:meals_app_animation/widget/traits.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MealItem extends StatelessWidget {
-  const MealItem(this._meal, {required this.onToggle, super.key});
+  const MealItem(this._meal, { super.key});
 
   final Meal _meal;
-  final void Function(Meal meal) onToggle;
+
 
   String get complexityText {
     return _meal.complexity.name[0].toUpperCase() +
@@ -27,10 +27,11 @@ class MealItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MealDetailScreen(
-              onToggle: onToggle,
-              meal: _meal,
-            ),
+            builder: (context) =>
+                MealDetailScreen(
+
+                  meal: _meal,
+                ),
           ),
         );
       },
@@ -44,7 +45,7 @@ class MealItem extends StatelessWidget {
           child: Stack(
             children: [
               Hero(
-                tag: _meal.imageUrl,
+                tag: _meal.id,
                 child: FadeInImage(
                   placeholder: MemoryImage(kTransparentImage),
                   image: NetworkImage(_meal.imageUrl),
@@ -60,7 +61,7 @@ class MealItem extends StatelessWidget {
                 child: Container(
                   color: Colors.black54,
                   padding:
-                      const EdgeInsets.symmetric(vertical: 6, horizontal: 44),
+                  const EdgeInsets.symmetric(vertical: 6, horizontal: 44),
                   child: Column(
                     children: [
                       Text(

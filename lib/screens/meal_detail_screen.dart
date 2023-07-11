@@ -1,24 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app_animation/models/meal.dart';
+import 'package:meals_app_animation/providers/favorite_provider.dart';
 
-class MealDetailScreen extends StatelessWidget {
-  const MealDetailScreen(
-      {required this.onToggle, required this.meal, super.key});
+class MealDetailScreen extends ConsumerWidget {
+  const MealDetailScreen({required this.meal, super.key});
 
   final Meal meal;
-  final void Function(Meal meal) onToggle;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favoriteMeals = ref.watch(favoriteProvider);
+
+    final isFavorite = favoriteMeals.contains(meal);
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
         actions: [
           IconButton(
             onPressed: () {
-              onToggle(meal);
+              // onToggle(meal);
+              final isAdded =
+                  ref.read(favoriteProvider.notifier).toggleFavorite(meal);
+              ScaffoldMessenger.of(context).clearSnackBars();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  duration: const Duration(seconds: 3),
+                  content:
+                      Text(isAdded ? 'Meal Item Added' : 'Meal Item Removed'),
+                ),
+              );
             },
-            icon: Icon(Icons.star),
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 700),
+              transitionBuilder: (child, animation) {
+                return RotationTransition(
+                  turns: animation,
+                  child: child,
+                );
+              },
+              child: Icon(
+                isFavorite ? Icons.star : Icons.star_border,
+                key: ValueKey(isFavorite),
+              ),
+            ),
           ),
         ],
       ),
@@ -26,7 +51,7 @@ class MealDetailScreen extends StatelessWidget {
         child: Column(
           children: [
             Hero(
-              tag: meal.imageUrl,
+              tag: meal.id,
               child: Image.network(
                 meal.imageUrl,
                 height: 300,

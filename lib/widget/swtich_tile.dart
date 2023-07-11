@@ -5,19 +5,19 @@ class SwitchTile extends StatelessWidget {
       {required this.label,
       required this.onlabel,
       required this.value,
-      required this.onSelected,
+      required this.onSwitch,
       super.key});
 
   final String label;
   final String onlabel;
   final bool value;
-  final void Function(bool value) onSelected;
+  final void Function(bool value) onSwitch;
 
   @override
   Widget build(BuildContext context) {
     return SwitchListTile(
       value: value,
-      onChanged: onSelected,
+      onChanged: onSwitch,
       title: Text(
         label,
         style: Theme.of(context).textTheme.titleLarge!.copyWith(
